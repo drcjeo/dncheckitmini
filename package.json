@@ -1,12 +1,13 @@
 {
-  "name": "dncheckit",
-  "version": "1.0.0",
-  "description": "Domain checker application",
-  "main": "index.js",
-  "scripts": {
-    "start": "serve public"
-  },
-  "dependencies": {
-    "serve": "^14.2.1"
+    "name": "dncheckit",
+    "version": "1.0.0",
+    "description": "Domain checker application",
+    "main": "index.js",
+    "scripts": {
+      "start": "serve public"
+    },
+    "dependencies": {
+      "serve": "^14.2.1"
+    }
   }
-}
+  
