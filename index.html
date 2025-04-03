@@ -100,11 +100,15 @@
             color: #28a745;
             font-weight: bold;
             animation: fadeIn 0.5s ease;
+            display: flex;
+            align-items: center;
         }
         .status-registered {
             color: #dc3545;
             font-weight: bold;
             animation: fadeIn 0.5s ease;
+            display: flex;
+            align-items: center;
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -180,14 +184,14 @@
                         resultDiv.innerHTML = `
                             <div class="status-available">
                                 <img src="${checkMarkIcon}" class="status-icon" alt="Available">
-                                Domain ${domain} is available! 🎉
-                                <div class="platform-badge">SPRING50: 50% OFF + 2 free domains</div>
-                            </div>`;
+                                <span>Domain ${domain} is available! 🎉</span>
+                            </div>
+                            <div class="platform-badge">SPRING50: 50% OFF + 2 free domains</div>`;
                     } else {
                         let resultHTML = `
                             <div class="status-registered">
                                 <img src="${xMarkIcon}" class="status-icon" alt="Registered">
-                                Domain ${domain} is registered
+                                <span>Domain ${domain} is registered</span>
                             </div><br>`;
                         
                         if (data.data.network) {
