@@ -5,7 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DNcheckit - Domain Checker</title>
     <style>
-        /* Previous styles remain the same until loading section */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #f6f8fa;
+            color: #24292e;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        h1 {
+            color: #2481cc;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .search-box {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            border: 2px solid #d0d7de;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .search-box:focus {
+            border-color: #2481cc;
+            box-shadow: 0 0 0 3px rgba(36,129,204,0.2);
+            outline: none;
+        }
+        .check-button {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            color: white;
+            background: #2481cc;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .check-button:hover {
+            background: #1b6698;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .result {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
         .loading {
             display: none;
             text-align: center;
@@ -27,7 +96,38 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        /* Rest of the styles remain the same */
+        .status-available {
+            color: #28a745;
+            font-weight: bold;
+            animation: fadeIn 0.5s ease;
+        }
+        .status-registered {
+            color: #dc3545;
+            font-weight: bold;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        a {
+            color: #2481cc;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        a:hover {
+            text-decoration: underline;
+            color: #1b6698;
+        }
+        .platform-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 0.25rem;
+            background: #e1e4e8;
+            color: #24292e;
+        }
     </style>
 </head>
 <body>
@@ -36,7 +136,7 @@
         <input type="text" class="search-box" id="domainInput" placeholder="Enter domain name...">
         <button class="check-button" id="checkButton">Check Domain</button>
         <div class="loading" id="loading">
-            <img src="/app/public/images/icons/loading-spinner.png" alt="Loading...">
+            <img src="/images/icons/loading-spinner.png" alt="Loading...">
             <div>Checking domain availability...</div>
         </div>
         <div class="result" id="result"></div>
@@ -66,25 +166,24 @@
                     if (response.status === 404) {
                         resultDiv.innerHTML = `
                             <div class="status-available">
-                                <img src="/app/public/images/icons/check-mark.png" class="status-icon" alt="Available">
+                                <img src="/images/icons/check-mark.png" class="status-icon" alt="Available">
                                 Domain ${domain} is available! 🎉
                             </div>`;
                     } else {
                         let resultHTML = `
                             <div class="status-registered">
-                                <img src="/app/public/images/icons/x-mark.png" class="status-icon" alt="Registered">
+                                <img src="/images/icons/x-mark.png" class="status-icon" alt="Registered">
                                 Domain ${domain} is registered
                             </div><br>`;
                         
-                        // Rest of the code remains the same
                         if (data.data.network) {
-                            resultHTML += `Network: ${data.data.network}<br>`;
+                            resultHTML += `<div class="platform-badge">Network: ${data.data.network}</div><br>`;
                         }
                         
                         if (data.data.records && data.data.records.length > 0) {
                             const websiteRecords = data.data.records.filter(record => record.type === 'WEBSITE');
                             if (websiteRecords.length > 0) {
-                                resultHTML += `Type: ${websiteRecords[0].type}<br>`;
+                                resultHTML += `<div class="platform-badge">Type: ${websiteRecords[0].type}</div><br>`;
                                 if (websiteRecords[0]) {
                                     const actualUrl = websiteRecords[0].value;
                                     resultHTML += `Web2: <a href="${actualUrl}" target="_blank">${actualUrl}</a><br>`;
@@ -103,7 +202,7 @@
                                 !key.toLowerCase().includes('tld') && 
                                 !key.toLowerCase().includes('sld')) {
                                 const displayKey = key.charAt(0).toUpperCase() + key.slice(1);
-                                resultHTML += `${displayKey}: ${value}<br>`;
+                                resultHTML += `<div class="platform-badge">${displayKey}: ${value}</div>`;
                             }
                         }
                         
