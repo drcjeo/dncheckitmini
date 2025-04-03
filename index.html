@@ -147,7 +147,7 @@
         <input type="text" class="search-box" id="domainInput" placeholder="Enter domain name...">
         <button class="check-button" id="checkButton">Check Domain</button>
         <div class="loading" id="loading">
-            <img src="public/images/icons/loading-spinner.png" alt="Loading...">
+            <img src="./images/icons/loading-spinner.png" alt="Loading...">
             <div>Checking domain availability...</div>
         </div>
         <div class="result" id="result"></div>
@@ -177,13 +177,13 @@
                     if (response.status === 404) {
                         resultDiv.innerHTML = `
                             <div class="status-available">
-                                <img src="public/images/icons/check-mark.png" class="status-icon" alt="Available">
+                                <img src="./images/icons/check-mark.png" class="status-icon" alt="Available">
                                 Domain ${domain} is available! 🎉
                             </div>`;
                     } else {
                         let resultHTML = `
                             <div class="status-registered">
-                                <img src="public/images/icons/x-mark.png" class="status-icon" alt="Registered">
+                                <img src="./images/icons/x-mark.png" class="status-icon" alt="Registered">
                                 Domain ${domain} is registered
                             </div><br>`;
                         
