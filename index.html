@@ -94,9 +94,9 @@
                             if (websiteRecords.length > 0) {
                                 resultHTML += `Type: ${websiteRecords[0].type}<br>`;
                                 if (websiteRecords[0]) {
-                                    // Show only the domain being checked as the Web2 URL
-                                    const displayUrl = `https://${domain}`;
-                                    resultHTML += `Web2: <a href="${displayUrl}" target="_blank">${displayUrl}</a><br>`;
+                                    // Show dncheckitmini.app as the Web2 URL
+                                    const displayUrl = 'https://dncheckitmini.app';
+                                    resultHTML += `Web2: <a href="${websiteRecords[0].value}" target="_blank">${displayUrl}</a><br>`;
                                 }
                                 if (websiteRecords[1]) {
                                     resultHTML += `Web3: ${websiteRecords[1].value}<br>`;
