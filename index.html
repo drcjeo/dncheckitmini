@@ -9,65 +9,92 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
             line-height: 1.6;
             padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-            background: #f6f8fa;
+            margin: 0;
+            background: linear-gradient(135deg, #1a1f71 0%, #2481cc 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: #24292e;
         }
         .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        .container:hover {
+            transform: translateY(-5px);
         }
         h1 {
-            color: #2481cc;
-            margin-bottom: 1.5rem;
+            color: #1a1f71;
+            margin-bottom: 0.5rem;
             text-align: center;
-            font-size: 2.5rem;
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         .search-box {
             width: 100%;
-            padding: 1rem;
-            font-size: 1.1rem;
-            border: 2px solid #d0d7de;
-            border-radius: 8px;
+            padding: 1.2rem;
+            font-size: 1.2rem;
+            border: 2px solid rgba(36,129,204,0.2);
+            border-radius: 12px;
             margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.9);
         }
         .search-box:focus {
             border-color: #2481cc;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(36,129,204,0.2);
+            box-shadow: 0 0 0 4px rgba(36,129,204,0.15);
+            transform: scale(1.01);
         }
         .check-button {
             width: 100%;
-            padding: 1rem;
-            font-size: 1.1rem;
+            padding: 1.2rem;
+            font-size: 1.2rem;
             color: white;
-            background: #2481cc;
+            background: linear-gradient(45deg, #1a1f71, #2481cc);
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             text-transform: uppercase;
             font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
         }
         .check-button:hover {
-            background: #1b6698;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(36,129,204,0.3);
+        }
+        .check-button:active {
+            transform: translateY(1px);
         }
         .result {
-            margin-top: 1.5rem;
-            padding: 1.5rem;
-            border-radius: 8px;
+            margin-top: 2rem;
+            padding: 0;
+            border-radius: 12px;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: all 0.4s ease;
         }
         .result.show {
             opacity: 1;
+            transform: translateY(0);
         }
         .loading {
             display: none;
             text-align: center;
             padding: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
         }
         .loading img {
             width: 40px;
@@ -75,10 +102,15 @@
             margin: 0 auto 1rem;
             animation: spin 1s linear infinite;
         }
+        .loading div {
+            color: #1a1f71;
+            font-size: 1.1rem;
+        }
         .status-icon {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
+            width: 28px;
+            height: 28px;
+            margin-right: 12px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
         @keyframes spin {
             from { transform: rotate(0deg); }
@@ -87,10 +119,11 @@
         .status-available, .status-registered {
             display: flex;
             align-items: center;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1.2rem;
             font-weight: bold;
+            transition: transform 0.3s ease;
         }
         .status-registered {
             background: rgba(40, 167, 69, 0.1);
@@ -104,27 +137,43 @@
         }
         .platform-badge {
             display: inline-block;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            margin: 0.25rem;
-            background: #f1f8ff;
+            padding: 0.8rem 1.2rem;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            margin: 0.4rem;
+            background: linear-gradient(135deg, #f1f8ff 0%, #e8f4ff 100%);
             color: #2481cc;
             border: 1px solid rgba(36, 129, 204, 0.2);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .platform-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         a {
             color: #2481cc;
             text-decoration: none;
+            transition: all 0.3s ease;
         }
         a:hover {
+            color: #1a1f71;
             text-decoration: underline;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666666;
+            margin-top: -0.5rem;
+            margin-bottom: 2rem;
+            font-size: 1.3rem;
+            font-weight: 300;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>DNcheckitMINI.APP</h1>
-        <h2 style="text-align: center; color: #666666; margin-top: -1rem; margin-bottom: 2rem; font-size: 1.2rem;">FN blockchain namespace explorer</h2>
+        <div class="subtitle">FN blockchain namespace explorer</div>
         <input type="text" class="search-box" id="domainInput" placeholder="Enter domain name...">
         <button class="check-button" id="checkButton">Check Domain</button>
         <div class="loading" id="loading">
@@ -181,8 +230,18 @@
                         if (data.data?.network) {
                             resultHTML += `<div class="platform-badge">Network: ${data.data.network}</div>`;
                         }
-                        
+
+                        // Find A record or ARECORD
+                        let aRecord = null;
                         if (data.data?.records?.length > 0) {
+                            const aRecordEntry = data.data.records.find(record => 
+                                record.type === 'A' || record.type === 'ARECORD'
+                            );
+                            if (aRecordEntry) {
+                                aRecord = aRecordEntry.value;
+                                resultHTML += `<div class="platform-badge">ARECORD: <a href="http://${aRecord}" target="_blank">${aRecord}</a></div>`;
+                            }
+
                             const websiteRecords = data.data.records.filter(record => record.type === 'WEBSITE');
                             if (websiteRecords.length > 0) {
                                 if (websiteRecords[0]) {
@@ -204,7 +263,7 @@
                                 !key.toLowerCase().includes('sld')) {
                                 const displayKey = key.charAt(0).toUpperCase() + key.slice(1);
                                 if (key.toLowerCase() === 'host') {
-                                    resultHTML += `<div class="platform-badge">${displayKey}: <a href="http://${value}" target="_blank">${value}</a></div>`;
+                                    resultHTML += `<div class="platform-badge">${displayKey}: ${aRecord ? `<a href="http://${aRecord}" target="_blank">${value}</a>` : value}</div>`;
                                 } else {
                                     resultHTML += `<div class="platform-badge">${displayKey}: ${value}</div>`;
                                 }
