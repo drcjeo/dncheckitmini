@@ -11,17 +11,44 @@
             text-align: center;
             padding: 2rem;
         }
-        .loading svg {
+        .loading img {
             width: 50px;
             height: 50px;
             margin: 0 auto 1rem;
-            animation: spin 1s linear infinite;
+            animation: spin 2s linear infinite;
         }
         .status-icon {
             width: 24px;
             height: 24px;
             vertical-align: middle;
             margin-right: 8px;
+            transition: all 0.3s ease;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .status-available {
+            color: #28a745;
+            font-weight: bold;
+            animation: fadeIn 0.5s ease;
+            display: flex;
+            align-items: center;
+            background: rgba(40, 167, 69, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+        .status-registered {
+            color: #dc3545;
+            font-weight: bold;
+            animation: fadeIn 0.5s ease;
+            display: flex;
+            align-items: center;
+            background: rgba(220, 53, 69, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(220, 53, 69, 0.2);
         }
         /* ... (rest of the styles remain the same) ... */
     </style>
@@ -32,9 +59,7 @@
         <input type="text" class="search-box" id="domainInput" placeholder="Enter domain name...">
         <button class="check-button" id="checkButton">Check Domain</button>
         <div class="loading" id="loading">
-            <svg class="status-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" stroke="#2481cc" stroke-width="2" fill="none"/>
-            </svg>
+            <img src="images/icons/loading-spinner.png" alt="Loading...">
             <div>Checking domain availability...</div>
         </div>
         <div class="result" id="result"></div>
@@ -45,24 +70,15 @@
             const checkButton = document.getElementById('checkButton');
             const loadingDiv = document.getElementById('loading');
             const resultDiv = document.getElementById('result');
-            
-            // SVG templates for icons
-            const checkMarkSvg = `
-                <svg class="status-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="10" stroke="#28a745" stroke-width="2" fill="none"/>
-                    <path d="M8 12l3 3 5-5" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>`;
-            
-            const xMarkSvg = `
-                <svg class="status-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="10" stroke="#dc3545" stroke-width="2" fill="none"/>
-                    <path d="M9 9l6 6m0-6l-6 6" stroke="#dc3545" stroke-width="2" stroke-linecap="round"/>
-                </svg>`;
+            const checkMarkIcon = "images/icons/check-mark.png";
+            const xMarkIcon = "images/icons/x-mark.png";
 
             checkButton.addEventListener('click', checkDomain);
 
             async function checkDomain() {
-                const domain = document.getElementById("domainInput").value;
+                const domain = document.getElementById("domainInput").value.trim();
+                if (!domain) return;
+                
                 resultDiv.style.opacity = '0';
                 loadingDiv.style.display = 'block';
                 resultDiv.style.display = 'none';
@@ -74,25 +90,28 @@
                     loadingDiv.style.display = 'none';
                     resultDiv.style.display = 'block';
                     
-                    if (response.status === 404) {
+                    // Domain is available if we get a 404 response
+                    const isAvailable = response.status === 404;
+                    
+                    if (isAvailable) {
                         resultDiv.innerHTML = `
                             <div class="status-available">
-                                ${checkMarkSvg}
+                                <img src="${checkMarkIcon}" class="status-icon" alt="Available">
                                 <span>Domain ${domain} is available! 🎉</span>
                             </div>
                             <div class="platform-badge">SPRING50: 50% OFF + 2 free domains</div>`;
                     } else {
                         let resultHTML = `
                             <div class="status-registered">
-                                ${xMarkSvg}
+                                <img src="${xMarkIcon}" class="status-icon" alt="Registered">
                                 <span>Domain ${domain} is registered</span>
                             </div><br>`;
                         
-                        if (data.data.network) {
+                        if (data.data?.network) {
                             resultHTML += `<div class="platform-badge">Network: ${data.data.network}</div><br>`;
                         }
                         
-                        if (data.data.records && data.data.records.length > 0) {
+                        if (data.data?.records?.length > 0) {
                             const websiteRecords = data.data.records.filter(record => record.type === 'WEBSITE');
                             if (websiteRecords.length > 0) {
                                 resultHTML += `<div class="platform-badge">Type: ${websiteRecords[0].type}</div><br>`;
@@ -107,7 +126,7 @@
                         }
                         
                         const skipFields = new Set(['istld', 'issld', 'network', 'records', 'url']);
-                        for (const [key, value] of Object.entries(data.data)) {
+                        for (const [key, value] of Object.entries(data.data || {})) {
                             if (value !== null && 
                                 value !== undefined && 
                                 !skipFields.has(key.toLowerCase()) && 
@@ -127,7 +146,11 @@
                 } catch (error) {
                     loadingDiv.style.display = 'none';
                     resultDiv.style.display = 'block';
-                    resultDiv.innerHTML = "Error checking domain. Please try again.";
+                    resultDiv.innerHTML = `
+                        <div class="status-registered">
+                            <img src="${xMarkIcon}" class="status-icon" alt="Error">
+                            <span>Error checking domain. Please try again.</span>
+                        </div>`;
                     resultDiv.style.opacity = '1';
                 }
             }
