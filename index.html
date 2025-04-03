@@ -1,8 +1,129 @@
-// Inside the checkDomain function, where we display the Web2 URL:
-if (websiteRecords[0]) {
-    const actualUrl = websiteRecords[0].value; // Keep the forwarding URL for functionality
-    const displayUrl = 'https://dncheckitmini.app'; // The URL we want to show
-    
-    // Use CSS to ensure only displayUrl is shown
-    resultHTML += `Web2: <a href="${actualUrl}" target="_blank" style="display: inline-block; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">${displayUrl}</a><br>`;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNcheckit - Domain Checker</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #f6f8fa;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+        h1 {
+            color: #2481cc;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .search-box {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+        .check-button {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            color: white;
+            background: #2481cc;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 6px;
+            background: #f6f8fa;
+        }
+        a {
+            color: #2481cc;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DNcheckit</h1>
+        <input type="text" class="search-box" id="domainInput" placeholder="Enter domain name...">
+        <button class="check-button" id="checkButton">Check Domain</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkButton = document.getElementById('checkButton');
+            checkButton.addEventListener('click', checkDomain);
+
+            async function checkDomain() {
+                const domain = document.getElementById("domainInput").value;
+                const resultDiv = document.getElementById("result");
+                resultDiv.innerHTML = "Checking domain...";
+                try {
+                    const response = await fetch(`https://apis.freename.io/api/v1/resolver/resolve/${domain}`);
+                    const data = await response.json();
+                    
+                    if (response.status === 404) {
+                        resultDiv.innerHTML = `Domain ${domain} is available! 🎉`;
+                    } else {
+                        let resultHTML = `Domain ${domain} is registered<br>`;
+                        
+                        // First show network
+                        if (data.data.network) {
+                            resultHTML += `Network: ${data.data.network}<br>`;
+                        }
+                        
+                        // Then show Type: WEBSITE and both hosts
+                        if (data.data.records && data.data.records.length > 0) {
+                            const websiteRecords = data.data.records.filter(record => record.type === 'WEBSITE');
+                            if (websiteRecords.length > 0) {
+                                resultHTML += `Type: ${websiteRecords[0].type}<br>`;
+                                if (websiteRecords[0]) {
+                                    const actualUrl = websiteRecords[0].value;
+                                    // Just display dncheckitmini.app but use actual URL for the link
+                                    resultHTML += `Web2: <a href="${actualUrl}" target="_blank">dncheckitmini.app</a><br>`;
+                                }
+                                if (websiteRecords[1]) {
+                                    resultHTML += `Web3: ${websiteRecords[1].value}<br>`;
+                                }
+                            }
+                        }
+                        
+                        // Then show remaining fields
+                        const skipFields = new Set(['istld', 'issld', 'network', 'records', 'url']);
+                        for (const [key, value] of Object.entries(data.data)) {
+                            if (value !== null && 
+                                value !== undefined && 
+                                !skipFields.has(key.toLowerCase()) && 
+                                !key.toLowerCase().includes('tld') && 
+                                !key.toLowerCase().includes('sld')) {
+                                const displayKey = key.charAt(0).toUpperCase() + key.slice(1);
+                                resultHTML += `${displayKey}: ${value}<br>`;
+                            }
+                        }
+                        
+                        resultDiv.innerHTML = resultHTML;
+                    }
+                } catch (error) {
+                    resultDiv.innerHTML = "Error checking domain. Please try again.";
+                }
+            }
+        });
+    </script>
+</body>
+</html>
