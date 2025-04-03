@@ -147,7 +147,7 @@
         <input type="text" class="search-box" id="domainInput" placeholder="Enter domain name...">
         <button class="check-button" id="checkButton">Check Domain</button>
         <div class="loading" id="loading">
-            <img src="./images/icons/loading-spinner.png" alt="Loading...">
+            <img src="https://sintra-dalle-generated-images.s3.eu-north-1.amazonaws.com/3d38d402-b48e-428a-9b6b-8c03e4fd1e12/image.png" alt="Loading...">
             <div>Checking domain availability...</div>
         </div>
         <div class="result" id="result"></div>
@@ -158,6 +158,8 @@
             const checkButton = document.getElementById('checkButton');
             const loadingDiv = document.getElementById('loading');
             const resultDiv = document.getElementById('result');
+            const checkMarkIcon = "https://sintra-dalle-generated-images.s3.eu-north-1.amazonaws.com/3dd52a9f-3fdb-43b1-896e-d326a65a2b2a/image.png";
+            const xMarkIcon = "https://sintra-dalle-generated-images.s3.eu-north-1.amazonaws.com/409702f0-de3c-40b7-80e3-b7b7679f0d1c/image.png";
 
             checkButton.addEventListener('click', checkDomain);
 
@@ -177,13 +179,14 @@
                     if (response.status === 404) {
                         resultDiv.innerHTML = `
                             <div class="status-available">
-                                <img src="./images/icons/check-mark.png" class="status-icon" alt="Available">
+                                <img src="${checkMarkIcon}" class="status-icon" alt="Available">
                                 Domain ${domain} is available! 🎉
+                                <div class="platform-badge">SPRING50: 50% OFF + 2 free domains</div>
                             </div>`;
                     } else {
                         let resultHTML = `
                             <div class="status-registered">
-                                <img src="./images/icons/x-mark.png" class="status-icon" alt="Registered">
+                                <img src="${xMarkIcon}" class="status-icon" alt="Registered">
                                 Domain ${domain} is registered
                             </div><br>`;
                         
