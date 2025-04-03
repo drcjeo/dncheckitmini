@@ -55,11 +55,15 @@
         a:hover {
             text-decoration: underline;
         }
+        .masked {
+            color: #388e3c;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>DNcheckit: the FN namespace search engine </h1>
+        <h1>DNcheckit</h1>
         <input type="text" class="search-box" id="domainInput" placeholder="Enter domain name...">
         <button class="check-button" id="checkButton">Check Domain</button>
         <div class="result" id="result"></div>
@@ -94,7 +98,13 @@
                             if (websiteRecords.length > 0) {
                                 resultHTML += `Type: ${websiteRecords[0].type}<br>`;
                                 if (websiteRecords[0]) {
-                                    resultHTML += `Web2: <a href="${websiteRecords[0].value}" target="_blank">${websiteRecords[0].value}</a><br>`;
+                                    // Check if URL masking is enabled
+                                    const isMasked = websiteRecords[0].masked || false;
+                                    resultHTML += `Web2: <a href="${websiteRecords[0].value}" target="_blank">${websiteRecords[0].value}</a>`;
+                                    if (isMasked) {
+                                        resultHTML += ` <span class="masked">(masked)</span>`;
+                                    }
+                                    resultHTML += '<br>';
                                 }
                                 if (websiteRecords[1]) {
                                     resultHTML += `Web3: ${websiteRecords[1].value}<br>`;
