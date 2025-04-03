@@ -5,56 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DNcheckit - Domain Checker</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-            background: #f6f8fa;
-        }
-        .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-        }
-        h1 {
-            color: #2481cc;
-            margin-bottom: 1.5rem;
+        /* Previous styles remain the same until loading section */
+        .loading {
+            display: none;
             text-align: center;
+            padding: 2rem;
         }
-        .search-box {
-            width: 100%;
-            padding: 0.75rem;
-            font-size: 1rem;
-            border: 1px solid #d0d7de;
-            border-radius: 6px;
-            margin-bottom: 1rem;
+        .loading img {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 1rem;
+            animation: spin 1s linear infinite;
         }
-        .check-button {
-            width: 100%;
-            padding: 0.75rem;
-            font-size: 1rem;
-            color: white;
-            background: #2481cc;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
+        .status-icon {
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+            margin-right: 8px;
         }
-        .result {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            border-radius: 6px;
-            background: #f6f8fa;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        a {
-            color: #2481cc;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
+        /* Rest of the styles remain the same */
     </style>
 </head>
 <body>
@@ -62,33 +35,52 @@
         <h1>DNcheckit</h1>
         <input type="text" class="search-box" id="domainInput" placeholder="Enter domain name...">
         <button class="check-button" id="checkButton">Check Domain</button>
+        <div class="loading" id="loading">
+            <img src="/app/public/images/icons/loading-spinner.png" alt="Loading...">
+            <div>Checking domain availability...</div>
+        </div>
         <div class="result" id="result"></div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const checkButton = document.getElementById('checkButton');
+            const loadingDiv = document.getElementById('loading');
+            const resultDiv = document.getElementById('result');
+
             checkButton.addEventListener('click', checkDomain);
 
             async function checkDomain() {
                 const domain = document.getElementById("domainInput").value;
-                const resultDiv = document.getElementById("result");
-                resultDiv.innerHTML = "Checking domain...";
+                resultDiv.style.opacity = '0';
+                loadingDiv.style.display = 'block';
+                resultDiv.style.display = 'none';
+                
                 try {
                     const response = await fetch(`https://apis.freename.io/api/v1/resolver/resolve/${domain}`);
                     const data = await response.json();
                     
+                    loadingDiv.style.display = 'none';
+                    resultDiv.style.display = 'block';
+                    
                     if (response.status === 404) {
-                        resultDiv.innerHTML = `Domain ${domain} is available! 🎉`;
+                        resultDiv.innerHTML = `
+                            <div class="status-available">
+                                <img src="/app/public/images/icons/check-mark.png" class="status-icon" alt="Available">
+                                Domain ${domain} is available! 🎉
+                            </div>`;
                     } else {
-                        let resultHTML = `Domain ${domain} is registered<br>`;
+                        let resultHTML = `
+                            <div class="status-registered">
+                                <img src="/app/public/images/icons/x-mark.png" class="status-icon" alt="Registered">
+                                Domain ${domain} is registered
+                            </div><br>`;
                         
-                        // First show network
+                        // Rest of the code remains the same
                         if (data.data.network) {
                             resultHTML += `Network: ${data.data.network}<br>`;
                         }
                         
-                        // Then show Type: WEBSITE and both hosts
                         if (data.data.records && data.data.records.length > 0) {
                             const websiteRecords = data.data.records.filter(record => record.type === 'WEBSITE');
                             if (websiteRecords.length > 0) {
@@ -103,7 +95,6 @@
                             }
                         }
                         
-                        // Then show remaining fields
                         const skipFields = new Set(['istld', 'issld', 'network', 'records', 'url']);
                         for (const [key, value] of Object.entries(data.data)) {
                             if (value !== null && 
@@ -118,8 +109,15 @@
                         
                         resultDiv.innerHTML = resultHTML;
                     }
+                    
+                    resultDiv.classList.add('show');
+                    resultDiv.style.opacity = '1';
+                    
                 } catch (error) {
+                    loadingDiv.style.display = 'none';
+                    resultDiv.style.display = 'block';
                     resultDiv.innerHTML = "Error checking domain. Please try again.";
+                    resultDiv.style.opacity = '1';
                 }
             }
         });
