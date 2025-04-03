@@ -69,7 +69,7 @@
             text-align: center;
             padding: 2rem;
         }
-        .loading img {
+        .loading svg {
             width: 40px;
             height: 40px;
             margin: 0 auto 1rem;
@@ -92,15 +92,10 @@
             margin-bottom: 1rem;
             font-weight: bold;
         }
-        .status-available {
+        .status-available, .status-registered {
             background: rgba(40, 167, 69, 0.1);
             border: 1px solid rgba(40, 167, 69, 0.2);
             color: #28a745;
-        }
-        .status-registered {
-            background: rgba(36, 129, 204, 0.1);
-            border: 1px solid rgba(36, 129, 204, 0.2);
-            color: #2481cc;
         }
         .platform-badge {
             display: inline-block;
@@ -120,7 +115,9 @@
         <input type="text" class="search-box" id="domainInput" placeholder="Enter domain name...">
         <button class="check-button" id="checkButton">Check Domain</button>
         <div class="loading" id="loading">
-            <img src="images/icons/loading-spinner.png" alt="Loading...">
+            <svg viewBox="0 0 50 50" class="spinner">
+                <circle cx="25" cy="25" r="20" fill="none" stroke="#2481cc" stroke-width="4" stroke-linecap="round" />
+            </svg>
             <div>Checking domain availability...</div>
         </div>
         <div class="result" id="result"></div>
@@ -132,7 +129,6 @@
             const loadingDiv = document.getElementById('loading');
             const resultDiv = document.getElementById('result');
             const checkMarkIcon = "images/icons/check-mark.png";
-            const xMarkIcon = "images/icons/x-mark.png";
 
             checkButton.addEventListener('click', checkDomain);
             document.getElementById('domainInput').addEventListener('keypress', function(e) {
@@ -210,7 +206,7 @@
                     resultDiv.style.display = 'block';
                     resultDiv.innerHTML = `
                         <div class="status-registered">
-                            <img src="${xMarkIcon}" class="status-icon" alt="Error">
+                            <img src="${checkMarkIcon}" class="status-icon" alt="Error">
                             <span>Error checking domain. Please try again.</span>
                         </div>`;
                     resultDiv.style.opacity = '1';
