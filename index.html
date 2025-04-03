@@ -30,12 +30,8 @@
                         const websiteRecords = data.data.records.filter(record => record.type === 'WEBSITE');
                         if (websiteRecords.length > 0) {
                             resultHTML += `Type: ${websiteRecords[0].type}<br>`;
-                            if (websiteRecords[0]) {
-                                // Always display dncheckitmini.app but use the actual URL for the link
-                                const displayUrl = 'dncheckitmini.app';
-                                const actualUrl = websiteRecords[0].value;
-                                resultHTML += `Web2: <a href="${actualUrl}" target="_blank">${displayUrl}</a><br>`;
-                            }
+                            // Always show dncheckitmini.app regardless of the actual URL
+                            resultHTML += `Web2: https://dncheckitmini.app<br>`;
                             if (websiteRecords[1]) {
                                 resultHTML += `Web3: ${websiteRecords[1].value}<br>`;
                             }
