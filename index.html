@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DNcheckit - Domain Checker</title>
+    <title>DNchekitMINI.APP - FN blockchain namespace explorer</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -116,11 +116,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>DNcheckit</h1>
+        <h1>DNchekitMINI.APP</h1>
+        <h2 style="text-align: center; color: #666666; margin-top: -1rem; margin-bottom: 2rem; font-size: 1.2rem;">FN blockchain namespace explorer</h2>
         <input type="text" class="search-box" id="domainInput" placeholder="Enter domain name...">
         <button class="check-button" id="checkButton">Check Domain</button>
         <div class="loading" id="loading">
-            <img src="/images/icons/loading-spinner.png" alt="Loading...">
+            <img src="images/icons/loading-spinner.png" alt="Loading...">
             <div>Checking domain availability...</div>
         </div>
         <div class="result" id="result"></div>
@@ -131,8 +132,8 @@
             const checkButton = document.getElementById('checkButton');
             const loadingDiv = document.getElementById('loading');
             const resultDiv = document.getElementById('result');
-            const checkMarkIcon = "/images/icons/check-mark.png";
-            const xMarkIcon = "/images/icons/x-mark.png";
+            const checkMarkIcon = "images/icons/check-mark.png";
+            const xMarkIcon = "images/icons/x-mark.png";
 
             checkButton.addEventListener('click', checkDomain);
             document.getElementById('domainInput').addEventListener('keypress', function(e) {
