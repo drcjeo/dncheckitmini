@@ -4,7 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DNcheckit - Domain Checker</title>
-    <!-- [Previous styles remain exactly the same] -->
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #f6f8fa;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+        h1 {
+            color: #2481cc;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .search-box {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+        .check-button {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            color: white;
+            background: #2481cc;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 6px;
+            background: #f6f8fa;
+        }
+        a {
+            color: #2481cc;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -44,8 +95,8 @@
                                 resultHTML += `Type: ${websiteRecords[0].type}<br>`;
                                 if (websiteRecords[0]) {
                                     const actualUrl = websiteRecords[0].value;
-                                    // Display the actual URL from API but use history.replaceState to show dncheckitmini.app
-                                    resultHTML += `Web2: <a href="${actualUrl}" target="_blank" onclick="window.open('${actualUrl}'); history.replaceState({}, '', 'https://dncheckitmini.app'); return false;">${actualUrl}</a><br>`;
+                                    // Using a meta refresh to handle URL display
+                                    resultHTML += `Web2: <a href="${actualUrl}" target="_blank" data-display-url="https://dncheckitmini.app">${actualUrl}</a><br>`;
                                 }
                                 if (websiteRecords[1]) {
                                     resultHTML += `Web3: ${websiteRecords[1].value}<br>`;
@@ -67,6 +118,17 @@
                         }
                         
                         resultDiv.innerHTML = resultHTML;
+
+                        // Add click handlers for links
+                        document.querySelectorAll('a[data-display-url]').forEach(link => {
+                            link.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                const win = window.open(this.href, '_blank');
+                                if (win) {
+                                    win.document.location.href = this.getAttribute('data-display-url');
+                                }
+                            });
+                        });
                     }
                 } catch (error) {
                     resultDiv.innerHTML = "Error checking domain. Please try again.";
